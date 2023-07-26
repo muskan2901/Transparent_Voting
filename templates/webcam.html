@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <title>Webcam Stream</title>
+    <style type="text/css">
+        .video-wrap {
+            padding: 24px 12px;
+            margin: 2px;
+            width: 720px;
+            height: 520px;
+            margin-left: 20%;
+        }
+        
+        #video {
+            width: 720px;
+            height: 520px;
+            background-color: #666;
+            border-radius: 15px;
+            {% comment %} box-shadow: 10px 10px; {% endcomment %}
+            margin-left:81px;
+          
+        }
+           .button {
+            border-radius: 4px;
+            background-color: #f0ecfc;
+            background-image: linear-gradient(315deg, #f0ecfc 0%, #726ae3 74%);
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 28px;
+            padding: 20px;
+            width: 200px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+            display: flex;
+            justify-content: center;
+            margin-left:-481px;
+            
+          }
+          
+          .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+          }
+          
+          .button span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+          }
+          
+          .button:Next span {
+            padding-right: 25px;
+          }
+          
+          .button:Next span:after {
+            opacity: 1;
+            right: 0;
+          }
+         #btn {
+            border-radius: 5px;
+            float: right;
+            margin: 24px 0;
+            width: 20%;
+            font-size: 26px;
+            background-color: #726ae3;
+            border: 1px solid;
+            color: #fff
+        }
+        
+          .btn {
+            cursor: pointer;
+            border: 0;
+            padding: 10px 20px;
+            background: #000;
+            color: #fff;
+            border-radius: 5px;
+        } 
+
+        #progressbar {
+            margin-bottom: 30px;
+            
+            /*CSS counters to number the steps*/
+            
+            counter-reset: step;
+          }
+          
+          #progressbar li {
+            list-style-type: none;
+            color:green;
+            text-transform: uppercase;
+            font-size: 12px;
+            width: 25%;
+            float: left;
+            position: relative;
+            padding:15px;
+          }
+          
+          #progressbar li:before {
+            content: counter(step);
+            counter-increment: step;
+            width: 20px;
+            line-height: 20px;
+            display: block;
+            font-size: 20px;
+            color: #333;
+            background: white;
+            border-radius: 3px;
+            margin: 0 auto 5px auto;
+          
+          }
+          
+          #progressbar li:first-child:after {
+          content: none;
+          }
+          
+          #progressbar li.active:before,
+          #progressbar li.active:after {
+            background: #27AE60;
+            color: white;
+          }
+          
+          .led-green {
+            background-color: #726ae3;
+            box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px,#726ae3 0 2px 12px;
+            
+        }
+     
+          .tdStyle
+          {
+          background-image:url("{% static 'img/' %}bg1.jpg");
+          background-repeat:no-repeat;
+          background-size:100%;
+          }
+  
+          .subhead{
+            {% comment %} font-size:30px; {% endcomment %}
+            font-family: copperplate;
+            
+          
+          }
+        {% comment %} .center {
+          display: flex;
+          justify-content: center;
+          margin-left:70%;
+        }
+        {% endcomment %}
+    </style>
+</head>
+
+<body class="tdStyle">
+  
+    <ul id="progressbar">
+        <div style="display:flex; margin-left:20%;">
+            {% if not request.session.phase_1 %}
+            <button class="btn">Person Detection</button> {% else %}
+            <button class="btn led-green" style="background-color:#32CD32 !important">Person Detection</button> {% endif %}
+    
+            
+            {% if not request.session.phase_2 %}
+            <button class="btn">Mask Detection</button> {% else %}
+            <button class="btn led-green" style="background-color:#32CD32 !important">Mask Detection</button>{% endif %}
+    
+          
+            {% if not request.session.phase_3 %}
+            <button class="btn">Face Recognition</button>{% else %}
+            <button class="btn led-green" style="background-color:#32CD32 !important">Face Recognition</button> {% endif %}
+    
+            
+            {% if not request.session.phase_4 %}
+            <button class="btn">Ready to Vote</button> {% else %}
+            <button class="btn led-green" style="background-color:#32CD32 !important">Ready to Vote</button> {% endif %}
+    
+        </div> 
+        
+
+    <div class="video-wrap">
+       
+        {% if stream %}
+        <img id="video" src="{% url stream %}">
+        <form method="post">
+            {% csrf_token %}
+            {% comment %} <input id="btn" type="submit" value="Next"> {% endcomment %}
+            <div class="centre" style="justify-content:center;display:flex; margin-left:70%; width:52%">
+              <button class="button"><span>Next </span></button>
+            </div>
+            
+        </form>
+        {% else %}
+      
+        <div class="subhead"><br><br>
+        {% comment %} <h3>HUMARA ADHIKAAR</h3><br> {% endcomment %}
+        {% include 'vote.html' %} {% endif %}
+        </div>
+    </div>
+
+
+     
+    
+  
+
+</body>
+
+</html>
